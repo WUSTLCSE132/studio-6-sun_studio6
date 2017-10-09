@@ -26,11 +26,40 @@ public class SerialComm {
 		debug = false; // Default is to NOT be in debug mode
 	}
 		
-	// TODO: Add writeByte() method from Studio 5
+	// TODO: Add writeByte() method that you created in Studio 5
 	
-	// TODO: Add available() method
+	public void writeByte(byte byt) throws SerialPortException{
+		this.port.writeByte(byt);
+		if(this.debug){
+			System.out.printf("0x%02X", byt);
+			System.out.println();
+		}
+	}
 	
-	// TODO: Add readByte() method	
+	public boolean available() throws SerialPortException {
+		if(this.port.getInputBufferBytesCount() > 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 	
-	// TODO: Add a main() method
+	public byte readByte() throws SerialPortException {
+		return this.port.readBytes()[0];
+	}
+	
+	public static void main(String[] args) throws SerialPortException, InterruptedException {
+		SerialComm comm = new SerialComm("COM4");
+		comm.debug = true;
+		while(true) {
+			Thread.sleep(1000);
+			if(comm.available()) {
+				if(comm.debug) {
+					System.out.printf("%02x", comm.readByte());
+					System.out.println();
+				}
+			}
+		}
+		
+	}
 }
